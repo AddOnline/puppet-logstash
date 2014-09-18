@@ -24,14 +24,17 @@ class logstash::params {
   $install_precommand = ''
   $install_postcommand = ''
 
-  $init_script_template = $::osfamily ? {
-    'Debian' => 'logstash/logstash.init.erb',
-    # 'Debian' => 'logstash/logstash.init-debian.erb',
-    default  => 'logstash/logstash.init.erb',
+  $init_script_template = ''
+  $init_script_template_no_tarball = 'logstash/logstash.init.erb'
+  $init_script_template_tarball = $::operatingsystem ? {
+    /(?i:Debian|Ubuntu|Mint)/ => 'logstash/logstash.init-tarball-debian.erb',
+    default                   => 'logstash/logstash.init-tarball.erb',
   }
 
   $upstart_template = 'logstash/logstash.upstart.erb'
   $base_install_source = 'http://logstash.objects.dreamhost.com/release'
+  # logstash > 1.4 should be downloaded from download.elasticsearch.org
+  $base_install_source_tarball = 'http://download.elasticsearch.org/logstash/logstash'
   $source_dir_patterns = ''
   $use_upstart = false
   $maxopenfiles = ''

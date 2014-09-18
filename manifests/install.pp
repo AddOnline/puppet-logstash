@@ -24,28 +24,35 @@ class logstash::install inherits logstash {
 
     source: {
 
-      $created_file = url_parse($logstash::real_install_source,'filename')
+      $created_file = $logstash::bool_tarball_install ? {
+        false => url_parse($logstash::real_install_source,'filename'),
+        true  => "logstash-${logstash::version}",
+      }
+      $file_logstash_link_path = $logstash::bool_tarball_install ? {
+        false => "${logstash::logstash_dir}/logstash.jar",
+        true  => "${logstash::logstash_dir}/logstash",
+      }
 
       if $logstash::bool_create_user == true {
         require logstash::user
-        
+
       }
       include logstash::skel
 
       puppi::netinstall { 'netinstall_logstash':
-        url                 => $logstash::real_install_source,
-        destination_dir     => $logstash::logstash_dir,
-        extract_command     => 'cp ',
-        preextract_command  => $logstash::install_precommand,
-        extracted_dir       => $created_file,
-        owner               => $logstash::process_user,
-        group               => $logstash::process_user,
-        before              => File ['logstash_link'],
+        url                => $logstash::real_install_source,
+        destination_dir    => $logstash::logstash_dir,
+        extract_command    => $logstash::real_extract_command,
+        preextract_command => $logstash::install_precommand,
+        extracted_dir      => $created_file,
+        owner              => $logstash::process_user,
+        group              => $logstash::process_user,
+        before             => File ['logstash_link'],
       }
 
       file { 'logstash_link':
         ensure  => "${logstash::logstash_dir}/${created_file}" ,
-        path    => "${logstash::logstash_dir}/logstash.jar" ,
+        path    => $file_logstash_link_path,
         require => Puppi::Netinstall ['netinstall_logstash'],
       }
 

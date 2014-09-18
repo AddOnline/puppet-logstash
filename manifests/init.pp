@@ -355,6 +355,11 @@ class logstash (
   $bool_firewall = any2bool($firewall)
   $bool_debug = any2bool($debug)
   $bool_audit_only = any2bool($audit_only)
+  if $logstash::version >= '1.4.0' {
+    $bool_tarball_install = true
+  } else {
+    $bool_tarball_install = false
+  }
 
   # ## Definition of some variables used in the module
   $manage_package = $logstash::bool_absent ? {
@@ -371,6 +376,14 @@ class logstash (
         false => true,
       },
     },
+  }
+
+  $manage_init_script_template = $logstash::init_script_template ? {
+    '' => $logstash::bool_tarball_install ? {
+      true  => $logstash::params::init_script_template_tarball,
+      false => $logstash::params::init_script_template_no_tarball,
+    },
+    default => $logstash::init_script_template,
   }
 
   $manage_service_ensure = $logstash::bool_disable ? {
@@ -440,8 +453,16 @@ class logstash (
 
   # ## Calculations of variables whose value depends on different params
   $real_install_source = $logstash::install_source ? {
-    ''      => "${logstash::params::base_install_source}/logstash-${logstash::version}-${logstash::jartype}.jar",
+    ''      => $logstash::bool_tarball_install ? {
+      true  => "${logstash::params::base_install_source_tarball}/logstash-${logstash::version}.tar.gz",
+      false => "${logstash::params::base_install_source}/logstash-${logstash::version}-${logstash::jartype}.jar",
+    },
     default => $logstash::install_source,
+  }
+
+  $real_extract_command = $logstash::bool_tarball_install ? {
+    true  => '',
+    false => 'cp ',
   }
 
   $logstash_dir = $logstash::install ? {

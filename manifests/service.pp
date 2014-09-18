@@ -56,7 +56,7 @@ class logstash::service inherits logstash {
         group   => $logstash::config_file_group,
         require => Class['logstash::install'],
         before  => Service['logstash'],
-        content => template($logstash::init_script_template),
+        content => template($logstash::manage_init_script_template),
         audit   => $logstash::manage_audit,
       }
     }

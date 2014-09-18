@@ -17,12 +17,16 @@ describe 'logstash' do
     it 'should install version 1.1.1 via netinstall' do
       should contain_puppi__netinstall('netinstall_logstash').with_url(/http:\/\/logstash.objects.dreamhost.com\/release\/logstash-1.1.1-flatjar.jar/)
     end
+    it { should contain_puppi__netinstall('netinstall_logstash').with_extract_command('cp ') }
+    it { should contain_file('logstash_link').with_ensure('/opt/logstash/logstash-1.1.1-flatjar.jar') }
+    it { should contain_file('logstash_link').with_path('/opt/logstash/logstash.jar') }
   end
 
   describe 'Test installation via puppi' do
     let(:params) { {:version => '1.1.1' , :install => 'puppi' } }
     it 'should install version 1.1.1 via puppi' do
       should contain_puppi__project__war('logstash').with_source(/http:\/\/logstash.objects.dreamhost.com\/release\/logstash-1.1.1-flatjar.jar/)
+
     end
   end
 
@@ -41,7 +45,7 @@ describe 'logstash' do
   describe 'Test decommissioning - absent' do
     let(:params) { {:absent => true, :install => 'package', :monitor => true , :firewall => true, :port => '42', :protocol => 'tcp'} }
 
-    it 'should remove Package[logstash]' do should contain_package('logstash').with_ensure('absent') end 
+    it 'should remove Package[logstash]' do should contain_package('logstash').with_ensure('absent') end
     it 'should not enable at boot Service[logstash]' do should contain_service('logstash').with_enable('false') end
     it 'should not monitor the process' do
       should contain_monitor__process('logstash_process').with_enable(false)
@@ -65,7 +69,7 @@ describe 'logstash' do
 
   describe 'Test decommissioning - disableboot' do
     let(:params) { {:disableboot => true, :install => 'package', :monitor => true , :firewall => true, :port => '42', :protocol => 'tcp'} }
-  
+
     it { should contain_package('logstash').with_ensure('present') }
     it 'should not enable at boot Service[logstash]' do should contain_service('logstash').with_enable('false') end
     it 'should not monitor the process locally' do
@@ -74,7 +78,7 @@ describe 'logstash' do
     it 'should keep a firewall rule' do
       should contain_firewall('logstash_tcp_42').with_enable(true)
     end
-  end 
+  end
 
   describe 'Test customizations - template' do
     let(:params) { {:template => "logstash/spec.erb" , :options => { 'opt_a' => 'value_a' } } }
@@ -142,7 +146,7 @@ describe 'logstash' do
     it 'should generate firewall resources' do
       should contain_firewall('logstash_tcp_42').with_tool("iptables")
     end
-    it 'should generate puppi resources ' do 
+    it 'should generate puppi resources ' do
       should contain_puppi__ze('logstash').with_ensure("present")
     end
   end
@@ -183,5 +187,32 @@ describe 'logstash' do
     end
   end
 
-end
+  describe 'Test init service script creation' do
+    let(:params) { {:version => '1.1.1' } }
+    it { should contain_file('logstash.init').with_ensure('present') }
+    it { should contain_file('logstash.init').with_path('/etc/init.d/logstash') }
+    it { should contain_file('logstash.init').with_mode('0755') }
+    it { should contain_file('logstash.init').with_owner('root') }
+    it { should contain_file('logstash.init').with_group('root') }
+    it { should contain_file('logstash.init').with_content(/java -jar \/opt\/logstash\/logstash-1.1.1-flatjar.jar/) }
+  end
 
+  describe 'Test init service script creation with logstash > 1.4.0' do
+    let(:params) { {:version => '1.4.2' } }
+    it { should contain_file('logstash.init').with_ensure('present') }
+    it { should contain_file('logstash.init').with_path('/etc/init.d/logstash') }
+    it { should contain_file('logstash.init').with_mode('0755') }
+    it { should contain_file('logstash.init').with_owner('root') }
+    it { should contain_file('logstash.init').with_group('root') }
+    it { should contain_file('logstash.init').with_content(/DAEMON=\/opt\/logstash\/bin\/logstash/) }
+  end
+
+  describe 'Test install logstash > 1.4.0' do
+    let(:params) { {:version => '1.4.2' } }
+
+    it { should contain_puppi__netinstall('netinstall_logstash').with_url(/http:\/\/download\.elasticsearch\.org\/logstash\/logstash\/logstash-1\.4\.2\.tar\.gz/) }
+    it { should contain_puppi__netinstall('netinstall_logstash').with_extract_command('') }
+    it { should contain_file('logstash_link').with_ensure('/opt/logstash/logstash-1.4.2') }
+    it { should contain_file('logstash_link').with_path('/opt/logstash/logstash') }
+  end
+end
