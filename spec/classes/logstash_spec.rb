@@ -204,7 +204,7 @@ describe 'logstash' do
     it { should contain_file('logstash.init').with_mode('0755') }
     it { should contain_file('logstash.init').with_owner('root') }
     it { should contain_file('logstash.init').with_group('root') }
-    it { should contain_file('logstash.init').with_content(/DAEMON=\/opt\/logstash\/bin\/logstash/) }
+    it { should contain_file('logstash.init').with_content(/DAEMON=\/opt\/logstash\/logstash\/bin\/logstash/) }
   end
 
   describe 'Test install logstash > 1.4.0' do
