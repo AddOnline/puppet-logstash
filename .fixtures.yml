@@ -1,12 +1,11 @@
 fixtures:
   repositories:
-    "puppi": "git://github.com/example42/puppi.git"
-    "monitor": "git://github.com/example42/puppet-monitor.git"
-    "firewall": "git://github.com/example42/puppet-firewall.git"
-    "iptables": "git://github.com/example42/puppet-iptables.git"
-    "concat": "git://github.com/example42/puppet-concat.git"
-    "java": "git://github.com/example42/puppet-java.git"
-    "stdlib": "git://github.com/puppetlabs/puppetlabs-stdlib.git"
-symlinks:
+    "puppi": "https://github.com/example42/puppi.git"
+    "monitor": "https://github.com/example42/puppet-monitor.git"
+    "firewall": "https://github.com/example42/puppet-firewall.git"
+    "iptables": "https://github.com/example42/puppet-iptables.git"
+    "concat": "https://github.com/example42/puppet-concat.git"
+    "java": "https://github.com/example42/puppet-java.git"
+    "stdlib": "https://github.com/puppetlabs/puppetlabs-stdlib.git"
+  symlinks:
     "logstash": "#{source_dir}"
-
