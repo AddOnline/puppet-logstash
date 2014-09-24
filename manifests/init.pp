@@ -465,6 +465,14 @@ class logstash (
     false => 'cp ',
   }
 
+  $real_config_dir = $config_dir ? {
+    ''      => $logstash::bool_tarball_install ? {
+      true  => $logstash::params::config_dir_tarball,
+      false => $logstash::params::config_dir_no_tarball,
+    },
+    default => $logstash::config_dir,
+  }
+
   $logstash_dir = $logstash::install ? {
     package => $logstash::params::base_data_dir,
     default => "${logstash::install_destination}/logstash",
@@ -521,7 +529,7 @@ class logstash (
   if $logstash::source_dir or $logstash::install != 'package' {
     file { 'logstash.dir':
       ensure  => directory,
-      path    => $logstash::config_dir,
+      path    => $logstash::real_config_dir,
       require => Class['logstash::install'],
       owner   => $logstash::process_user,
       group   => $logstash::process_group,

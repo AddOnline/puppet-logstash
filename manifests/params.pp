@@ -94,9 +94,9 @@ class logstash::params {
     default => '/var/run/logstash.pid',
   }
 
-  $config_dir = $::operatingsystem ? {
-    default => '/etc/logstash',
-  }
+  $config_dir = ''
+  $config_dir_no_tarball = '/etc/logstash'
+  $config_dir_tarball = '/etc/logstash/conf.d'
 
   $data_dir = ''
   $base_data_dir = $::operatingsystem ? {

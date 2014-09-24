@@ -39,4 +39,15 @@ class logstash::skel inherits logstash {
       source  => $logstash::source_dir_patterns,
     }
   }
+
+  if $logstash::bool_tarball_install {
+    file { 'logstash_var_lib':
+      ensure => 'directory',
+      path   => $logstash::params::base_data_dir,
+      owner  => $logstash::process_user,
+      group  => $logstash::process_group,
+      audit  => $logstash::manage_audit,
+    }
+  }
+
 }

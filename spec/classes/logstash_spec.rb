@@ -207,6 +207,12 @@ describe 'logstash' do
     it { should contain_file('logstash.init').with_content(/DAEMON=\/opt\/logstash\/logstash\/bin\/logstash/) }
   end
 
+  describe 'Test install logstash < 1.4.0' do
+    let(:params) { {:version => '1.1.1' } }
+
+    it { should contain_file('logstash.dir').with_path('/etc/logstash') }
+  end
+
   describe 'Test install logstash > 1.4.0' do
     let(:params) { {:version => '1.4.2' } }
 
@@ -214,5 +220,12 @@ describe 'logstash' do
     it { should contain_puppi__netinstall('netinstall_logstash').with_extract_command('') }
     it { should contain_file('logstash_link').with_ensure('/opt/logstash/logstash-1.4.2') }
     it { should contain_file('logstash_link').with_path('/opt/logstash/logstash') }
+
+    it { should contain_file('logstash_var_lib').with_ensure('directory') }
+    it { should contain_file('logstash_var_lib').with_path('/var/lib/logstash') }
+    it { should contain_file('logstash_var_lib').with_owner('logstash') }
+    it { should contain_file('logstash_var_lib').with_group('logstash') }
+
+    it { should contain_file('logstash.dir').with_path('/etc/logstash/conf.d') }
   end
 end

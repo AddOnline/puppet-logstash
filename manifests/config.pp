@@ -43,7 +43,7 @@ define logstash::config (
 
   file { "logstash.conf_${name}":
     ensure  => $ensure,
-    path    => "${logstash::config_dir}/${name}.conf",
+    path    => "${logstash::real_config_dir}/${name}.conf",
     mode    => $logstash::config_file_mode,
     owner   => $logstash::config_file_owner,
     group   => $logstash::config_file_group,
