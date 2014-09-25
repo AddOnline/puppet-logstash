@@ -230,6 +230,10 @@
 # [*process_group*]
 #   The name of the group logstash runs with. Used by puppi and monitor.
 #
+# [*patterns_dir*]
+#   For logstash > 1.4 the path to the patterns_dir.
+#   Default : /etc/logstash/patterns
+#
 # [*config_dir*]
 #   Main configuration directory. Used by puppi
 #

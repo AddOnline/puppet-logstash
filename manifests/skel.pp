@@ -48,6 +48,14 @@ class logstash::skel inherits logstash {
       group  => $logstash::process_group,
       audit  => $logstash::manage_audit,
     }
+    file { 'logstash_patterns.dir':
+      ensure => directory,
+      path   => $logstash::patterns_dir,
+      owner  => $logstash::process_user,
+      group  => $logstash::process_group,
+      audit  => $logstash::manage_audit,
+    }
+
   }
 
 }

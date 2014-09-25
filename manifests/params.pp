@@ -98,6 +98,8 @@ class logstash::params {
   $config_dir_no_tarball = '/etc/logstash'
   $config_dir_tarball = '/etc/logstash/conf.d'
 
+  $patterns_dir = '/etc/logstash/patterns'
+
   $data_dir = ''
   $base_data_dir = $::operatingsystem ? {
     default => '/var/lib/logstash',

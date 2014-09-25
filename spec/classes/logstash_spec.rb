@@ -227,5 +227,13 @@ describe 'logstash' do
     it { should contain_file('logstash_var_lib').with_group('logstash') }
 
     it { should contain_file('logstash.dir').with_path('/etc/logstash/conf.d') }
+    it { should contain_file('logstash.dir').with_ensure('directory') }
+    it { should contain_file('logstash.dir').with_owner('logstash') }
+    it { should contain_file('logstash.dir').with_group('logstash') }
+
+    it { should contain_file('logstash_patterns.dir').with_path('/etc/logstash/patterns') }
+    it { should contain_file('logstash_patterns.dir').with_ensure('directory') }
+    it { should contain_file('logstash_patterns.dir').with_owner('logstash') }
+    it { should contain_file('logstash_patterns.dir').with_group('logstash') }
   end
 end
