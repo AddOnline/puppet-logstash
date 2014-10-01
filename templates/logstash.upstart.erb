@@ -16,5 +16,5 @@ setgid <%= scope.lookupvar('logstash::process_user') %>
 console log
 
 script
-        exec java -jar logstash.jar <%= scope.lookupvar('logstash::run_mode') %> -f  <%= scope.lookupvar('logstash::config_dir') %> -l <%= scope.lookupvar('logstash::log_file') %> <%= scope.lookupvar('logstash::run_options') %>
+        exec java -jar logstash.jar <%= scope.lookupvar('logstash::run_mode') %> -f  <%= scope.lookupvar('logstash::real_config_dir') %> -l <%= scope.lookupvar('logstash::log_file') %> <%= scope.lookupvar('logstash::run_options') %>
 end script

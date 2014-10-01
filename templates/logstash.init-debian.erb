@@ -65,7 +65,7 @@ LS_HOME=<%= scope.lookupvar('logstash::logstash_dir') %>
 LOG_DIR=<%= scope.lookupvar('logstash::log_dir') %>
 
 # logstash configuration (supports file, directory and glob)
-CONF=<%= scope.lookupvar('logstash::config_dir') %>
+CONF=<%= scope.lookupvar('logstash::real_config_dir') %>
 
 # logstash log file
 LOG_FILE=<%= scope.lookupvar('logstash::log_file') %>
@@ -100,7 +100,7 @@ case "$1" in
       fi
 
       log_daemon_msg "Starting $DESC"
-   
+
       if start-stop-daemon --test --start --pidfile "$PID_FILE" \
          --user "$LS_USER" --exec "$JAVA_HOME/bin/java" \
       >/dev/null; then
@@ -130,13 +130,13 @@ case "$1" in
          log_progress_msg "(already running)"
          log_end_msg 0
       fi
-   ;;    
+   ;;
    stop)
       log_daemon_msg "Stopping $DESC"
 
       set +e
 
-      if [ -f "$PID_FILE" ]; then 
+      if [ -f "$PID_FILE" ]; then
          start-stop-daemon --stop --pidfile "$PID_FILE" \
             --user "$LS_USER" \
             --retry=TERM/20/KILL/5 >/dev/null
