@@ -194,7 +194,7 @@ describe 'logstash' do
     it { should contain_file('logstash.init').with_mode('0755') }
     it { should contain_file('logstash.init').with_owner('root') }
     it { should contain_file('logstash.init').with_group('root') }
-    it { should contain_file('logstash.init').with_content(/java -jar \/opt\/logstash\/logstash-1.1.1-flatjar.jar/) }
+    it { should contain_file('logstash.init').with_content(/java -jar \/opt\/logstash\/logstash-1.1.1-flatjar.jar agent -f \/etc\/logstash -l \/var\/log\/logstash\/logstash\.log/) }
   end
 
   describe 'Test init service script creation with logstash > 1.4.0' do
